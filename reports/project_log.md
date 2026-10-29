@@ -20,17 +20,26 @@ Plain-language record of what was done, what was found, and what changed from th
 - An earlier exploratory correlation looked "predictive" but was contemporaneous because of the date error. It is not to be quoted.
 - Late-day headlines correlate most strongly with the move, which suggests news partly reports price moves that already happened. This is a hypothesis to test in M4/M5, and is the main threat to claiming real forecasting skill.
 
+## M3: daily feature table (2026-10-29)
+- Built `src/features.py`: one row per (pair, trading date) with mean FinBERT score, mean LLM score, disagreement rate, headline count, and price features. Headlines at or after 16:00 UTC (noon New York) roll to the next day so news written after a price move cannot sit beside that move.
+- 8 tests pass, including: changing only future prices cannot change any feature, and headlines after the cutoff cannot leak into that day.
+- Sample: 249 eligible pair-days (not the ~300 estimated), target up-rate 51.0%.
+- **Finding: on corrected dates, daily sentiment has no detectable correlation with next-day returns** (FinBERT -0.02, LLM -0.06; every 95% interval includes zero; same with an extra day of gap).
+- Supporting evidence for the "news reports the move" explanation: letting late-day headlines into the same day raises the LLM's correlation with that day's move from 0.10 to 0.28.
+- Detail: `reports/features_m3.md`.
+
 ## Changes the slides need
 | Slide | Change |
 |---|---|
 | 2, 3, 6, 7, 10, 12 | "ChatGPT" becomes "an open-weights LLM (Qwen2.5-14B)". Slide 3 still correctly describes the paper's ChatGPT work. |
 | 9, 12 | 41.9% is the paper's figure. Our measured FinBERT vs LLM disagreement is 44.0%. Remove "completed analysis of saved predictions". |
-| 8, 11 | Mention the verified timing rule (UTC dates, Yahoo re-dating) and that the 70/20/10 split is replaced by walk-forward evaluation because the sample is small. |
+| 8, 11 | Update slide 8's timing note (it says timing needs verification: it is now verified, rule on `features_m3.md`). Mention the verified timing rule (UTC dates, Yahoo re-dating) and that the 70/20/10 split is replaced by walk-forward evaluation because the sample is small. |
 
 ## Presentation talking points so far
 - We checked our own pipeline against an independent data source and caught a one-day date error before it produced fake results.
 - Models disagree on 44% of headlines, and the LLM is more reliable when FinBERT agrees with it.
+- On corrected dates, news sentiment does not predict next-day direction in this sample; the earlier apparent link was the date error.
 - Honest limits: one open-weights LLM instead of ChatGPT, about 300 pair-days, labels framed as price impact.
 
 ## Next
-M3 daily feature table with leakage tests, then the six-variant comparison (M4) and error analysis (M5).
+M4 six-variant comparison with walk-forward evaluation and bootstrap intervals, then M5 error analysis. Expect the honest answer may be that no variant beats the 51% majority baseline.

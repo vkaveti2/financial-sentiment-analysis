@@ -13,7 +13,7 @@ M0 and M1 are done; M2 to M6 are planned. The midterm slides quote 2,291 headlin
 | M0 | Repo structure, environment | done |
 | M1 | Download dataset, check 2,291 / 41.9%, pull prices, label with local LLM | done |
 | M2 | FinBERT + LLM labels per headline (FinBERT ships in the dataset; LLM labels done) | mostly done |
-| M3 | Daily feature table with leakage tests | in progress (timing rule decided) |
+| M3 | Daily feature table with leakage tests | done (249 eligible pair-days; see `reports/features_m3.md`) |
 | M4 | Six-variant ablation (walk-forward, bootstrap CIs) | todo |
 | M5 | Disagreement test + error analysis | todo |
 | M6 | Final slides / report | todo |
@@ -42,7 +42,7 @@ python -m src.sentiment   # LLM labels (~15 min, cached)
 
 ## Data
 
-Headlines: Fatouros et al., *Forex news annotated dataset for sentiment analysis*, Zenodo, doi:10.5281/zenodo.7976208 (5 pairs, Jan to May 2023). Check the Zenodo license before committing any data. Daily prices come from Yahoo Finance via `yfinance` (`src/prices.py`). Yahoo's rows are dated one trading day late, so use the `move_date` column; see `reports/timing_decision.md`.
+Headlines: Fatouros et al., *Forex news annotated dataset for sentiment analysis*, Zenodo, doi:10.5281/zenodo.7976208 (5 pairs, Jan to May 2023). Check the Zenodo license before committing any data. Daily prices come from Yahoo Finance via `yfinance` (`src/prices.py`). Daily features: `python -m src.features`. Tests: `python -m pytest tests`. Yahoo's rows are dated one trading day late, so use the `move_date` column; see `reports/timing_decision.md`.
 
 ## References
 
