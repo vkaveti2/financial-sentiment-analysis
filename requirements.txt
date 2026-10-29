@@ -6,6 +6,5 @@ transformers==4.57.6
 matplotlib==3.9.4
 pyarrow
 yfinance
-openai
 python-dotenv
 pytest
