@@ -6,13 +6,13 @@ DS 340W project (Harshi Chinnam, Varun Kaveti).
 
 ## Status
 
-Early setup (M0). The pipeline below is planned, not built yet. Numbers quoted in the midterm slides (2,291 headlines, 41.9% model disagreement) come from Fatouros et al. (2023) and have **not** been reproduced in this repo yet; reproducing them is milestone M1.
+M0 and M1 are done; M2 to M6 are planned. The midterm slides quote 2,291 headlines and 41.9% model disagreement from Fatouros et al. (2023). The headline count is confirmed. The 41.9% cannot be reproduced because the dataset ships no GPT-P2 labels. With a free local LLM (Qwen2.5-14B via Ollama) standing in for ChatGPT, FinBERT and the LLM disagree on 44.0% of headlines. Details in `reports/data_audit.md`.
 
 | Milestone | What | State |
 |---|---|---|
-| M0 | Repo structure, environment | in progress |
-| M1 | Download dataset, verify 2,291 / 41.9%, pull prices | todo |
-| M2 | FinBERT + GPT-P2 labels per headline | todo |
+| M0 | Repo structure, environment | done |
+| M1 | Download dataset, check 2,291 / 41.9%, pull prices, label with local LLM | done |
+| M2 | FinBERT + LLM labels per headline (FinBERT ships in the dataset; LLM labels done) | mostly done |
 | M3 | Daily feature table with leakage tests | todo |
 | M4 | Six-variant ablation (walk-forward, bootstrap CIs) | todo |
 | M5 | Disagreement test + error analysis | todo |
@@ -34,7 +34,10 @@ tests/       leakage, alignment, and split tests
 ```
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # add OPENAI_API_KEY only if re-running GPT labels
+brew install ollama && ollama serve   # separate terminal
+ollama pull qwen2.5:14b-instruct
+python -m src.prices      # daily FX prices
+python -m src.sentiment   # LLM labels (~15 min, cached)
 ```
 
 ## Data

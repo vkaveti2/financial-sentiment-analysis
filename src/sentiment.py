@@ -8,6 +8,7 @@ import argparse
 import json
 import urllib.request
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 
@@ -37,7 +38,7 @@ def ask(pair: str, title: str) -> str:
     return word if word in LABELS else "invalid"
 
 
-def main(limit: int | None = None) -> None:
+def main(limit: Optional[int] = None) -> None:
     df = pd.read_csv(RAW)
     if limit:
         df = df.head(limit)
