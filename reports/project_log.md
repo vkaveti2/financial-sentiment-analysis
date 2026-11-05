@@ -37,6 +37,13 @@ Plain-language record of what was done, what was found, and what changed from th
 - Robustness (gap, no-roll, drop EURCHF, boosting) agrees: nothing above chance.
 - Detail: `reports/m4_results.md`.
 
+## Reproduction of the parent paper (2026-11-05)
+- `src/reproduce.py` computes the paper's own metrics on our data. FinBERT matches paper Table 4 to three decimals (accuracy 0.562 vs 0.561; precision, recall, F1, S-MAE identical). Qwen lands between the paper's GPT-P1 and GPT-P2.
+- Same-day market link is similar to the paper (directional accuracy about 0.62 to 0.64 vs 0.60 to 0.64; EURCHF weak in both). Human-label correlation 0.44 vs the paper's ~0.49.
+- Did not reproduce: GPT-P2 numbers (no ChatGPT), the 41.9%, the paper's "filtered data" table, the 35%/36% formulas.
+- Paper numbers came from the arXiv HTML via a fetch tool; check them against the PDF before citing.
+- Detail: `reports/reproduction_vs_parent_paper.md`.
+
 ## Changes the slides need
 | Slide | Change |
 |---|---|

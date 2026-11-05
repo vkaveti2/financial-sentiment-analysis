@@ -44,7 +44,7 @@ python -m src.sentiment   # LLM labels (~15 min, cached)
 
 One command rebuilds inputs on a fresh clone: `python -m src.data` (downloads the Zenodo file with an md5 check and restores our Qwen labels from `data/labels/llm_labels.csv`). That file is derived from the CC-BY-4.0 Zenodo dataset (Fatouros et al.), reused here with attribution.
 
-Headlines: Fatouros et al., *Forex news annotated dataset for sentiment analysis*, Zenodo, doi:10.5281/zenodo.7976208 (5 pairs, Jan to May 2023). Check the Zenodo license before committing any data. Daily prices come from Yahoo Finance via `yfinance` (`src/prices.py`). Daily features: `python -m src.features`. Tests: `python -m pytest tests`. Full comparison: `python -m src.run_m4`. Yahoo's rows are dated one trading day late, so use the `move_date` column; see `reports/timing_decision.md`.
+Headlines: Fatouros et al., *Forex news annotated dataset for sentiment analysis*, Zenodo, doi:10.5281/zenodo.7976208 (5 pairs, Jan to May 2023). Check the Zenodo license before committing any data. Daily prices come from Yahoo Finance via `yfinance` (`src/prices.py`). Daily features: `python -m src.features`. Tests: `python -m pytest tests`. Full comparison: `python -m src.run_m4`. Parent-paper reproduction: `python -m src.reproduce` (results in `reports/reproduction_vs_parent_paper.md`). Yahoo's rows are dated one trading day late, so use the `move_date` column; see `reports/timing_decision.md`.
 
 ## References
 
