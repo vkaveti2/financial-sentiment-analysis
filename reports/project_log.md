@@ -28,18 +28,29 @@ Plain-language record of what was done, what was found, and what changed from th
 - Supporting evidence for the "news reports the move" explanation: letting late-day headlines into the same day raises the LLM's correlation with that day's move from 0.10 to 0.28.
 - Detail: `reports/features_m3.md`.
 
+## M4: six-variant comparison (2026-11-05)
+- Wrote and committed the analysis plan before running anything (`m4_analysis_plan.md`, commit `06310e3`), then ran it unchanged.
+- Added `src/data.py` (one-command rebuild with checksum) and committed our Qwen labels so a fresh clone does not need 15 minutes of labeling.
+- Walk-forward by date, 8 folds, 164 test rows, date-block bootstrap intervals, 14 tests passing.
+- **Result: no variant beats the baseline or prices-only. Disagreement did not help (-1.8 points, interval [-5.9, +2.4]).** Best-looking variant (+LLM) is +3.0 points over baseline with interval [-8.4, +14.7].
+- The majority baseline scored 49.4% (below 50%) because the test period was 54.9% UP and the training periods leaned DOWN. Explained in `m4_results.md`.
+- Robustness (gap, no-roll, drop EURCHF, boosting) agrees: nothing above chance.
+- Detail: `reports/m4_results.md`.
+
 ## Changes the slides need
 | Slide | Change |
 |---|---|
 | 2, 3, 6, 7, 10, 12 | "ChatGPT" becomes "an open-weights LLM (Qwen2.5-14B)". Slide 3 still correctly describes the paper's ChatGPT work. |
 | 9, 12 | 41.9% is the paper's figure. Our measured FinBERT vs LLM disagreement is 44.0%. Remove "completed analysis of saved predictions". |
+| 10, 11 | Slide 10 needs the results table (use `m4_results.md`). Slide 11's 70/20/10 split was replaced by walk-forward: 8 folds, 164 test rows, date-level bootstrap. |
 | 8, 11 | Update slide 8's timing note (it says timing needs verification: it is now verified, rule on `features_m3.md`). Mention the verified timing rule (UTC dates, Yahoo re-dating) and that the 70/20/10 split is replaced by walk-forward evaluation because the sample is small. |
 
 ## Presentation talking points so far
 - We checked our own pipeline against an independent data source and caught a one-day date error before it produced fake results.
 - Models disagree on 44% of headlines, and the LLM is more reliable when FinBERT agrees with it.
 - On corrected dates, news sentiment does not predict next-day direction in this sample; the earlier apparent link was the date error.
+- Combining the two models, and adding their disagreement, did not improve forecasts; with 164 test rows we can rule out only large effects (about 10 points or more).
 - Honest limits: one open-weights LLM instead of ChatGPT, about 300 pair-days, labels framed as price impact.
 
 ## Next
-M4 six-variant comparison with walk-forward evaluation and bootstrap intervals, then M5 error analysis. Expect the honest answer may be that no variant beats the 51% majority baseline.
+M5 error analysis (where do the models disagree and who is right; does disagreement predict the size of the next move, not its direction), then M6 slides and report. Deadline: Sunday 2026-11-15.
