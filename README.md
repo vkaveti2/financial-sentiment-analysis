@@ -14,7 +14,7 @@ M0 and M1 are done; M2 to M6 are planned. The midterm slides quote 2,291 headlin
 | M1 | Download dataset, check 2,291 / 41.9%, pull prices, label with local LLM | done |
 | M2 | FinBERT + LLM labels per headline (FinBERT ships in the dataset; LLM labels done) | mostly done |
 | M3 | Daily feature table with leakage tests | done (249 eligible pair-days; see `reports/features_m3.md`) |
-| M4 | Six-variant ablation (walk-forward, bootstrap CIs) | todo |
+| M4 | Six-variant ablation (walk-forward, bootstrap CIs) | in progress; plan fixed in `reports/m4_analysis_plan.md` before running |
 | M5 | Disagreement test + error analysis | todo |
 | M6 | Final slides / report | todo |
 
@@ -41,6 +41,8 @@ python -m src.sentiment   # LLM labels (~15 min, cached)
 ```
 
 ## Data
+
+One command rebuilds inputs on a fresh clone: `python -m src.data` (downloads the Zenodo file with an md5 check and restores our Qwen labels from `data/labels/llm_labels.csv`). That file is derived from the CC-BY-4.0 Zenodo dataset (Fatouros et al.), reused here with attribution.
 
 Headlines: Fatouros et al., *Forex news annotated dataset for sentiment analysis*, Zenodo, doi:10.5281/zenodo.7976208 (5 pairs, Jan to May 2023). Check the Zenodo license before committing any data. Daily prices come from Yahoo Finance via `yfinance` (`src/prices.py`). Daily features: `python -m src.features`. Tests: `python -m pytest tests`. Yahoo's rows are dated one trading day late, so use the `move_date` column; see `reports/timing_decision.md`.
 
