@@ -18,6 +18,18 @@ M0 to M4 are done; M5 and M6 are next. The midterm slides quote 2,291 headlines 
 | M5 | Disagreement test + error analysis | todo |
 | M6 | Final slides / report | todo |
 
+## Demo (for the recording)
+
+After setup, one command prints every number the project reports:
+
+```
+python -m src.data && python -m src.prices   # fetch inputs (first time only)
+python -m src.demo                           # instant, no Ollama needed
+python -m src.demo --live 5                  # also labels 5 headlines live (needs `ollama serve`)
+```
+
+It shows: FinBERT vs the local LLM against human labels (56.2% vs 75.2%), FinBERT-vs-LLM disagreement (44.0% here, compared with the 41.9% on the proposal slides, which used ChatGPT), whether disagreement signals unreliable labels, the same-day link to price moves, and the walk-forward prediction test. Tests: `python -m pytest tests`.
+
 ## Layout
 
 ```
