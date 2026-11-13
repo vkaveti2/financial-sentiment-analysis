@@ -64,8 +64,24 @@ def main(live: int) -> None:
     print(s[["variant", "accuracy (95% interval)"]].to_string(index=False))
     print("Every interval includes 50%: no evidence that news sentiment, alone or combined, predicts next-day direction here.")
 
+    nov = ROOT / "reports" / "novelty_results" / "comparison_table.csv"
+    if nov.exists():
+        heading("7. OUR NOVEL CONTRIBUTION: HOW THE LOCAL LLM IS USED (916 held-out later headlines)")
+        names = {"A0": "A0 FinBERT (parent's classical model)", "A1": "A1 Qwen zero-shot (parent's style)",
+                 "A2": "A2 Qwen few-shot, 9 fixed examples", "A3": "A3 Qwen few-shot, RETRIEVED examples (novel)",
+                 "A4": "A4 Stacked FinBERT + Qwen (tested, no gain)"}
+        t = pd.read_csv(nov)
+        t["technique"] = t["technique"].map(names)
+        t["accuracy (95% interval)"] = t.apply(lambda r: f"{r.accuracy:.3f} [{r.acc_lo:.3f}, {r.acc_hi:.3f}]", axis=1)
+        print(t[["technique", "accuracy (95% interval)", "weighted_f1", "s_mae"]].round(3).to_string(index=False))
+        c = pd.read_csv(ROOT / "reports" / "novelty_results" / "paired_comparisons.csv")
+        c = c[c["comparison"].isin(["A2 minus A1", "A3 minus A1", "A3 minus A2", "A4 minus A3"])]
+        print("\nPaired accuracy differences (95% interval):")
+        for _, r in c.iterrows():
+            print(f"  {r['comparison']:12s} {r['acc_diff']:+.3f}  [{r['lo']:+.3f}, {r['hi']:+.3f}]")
+
     if live:
-        heading(f"7. LIVE: {live} random headlines labeled by Ollama right now")
+        heading(f"8. LIVE: {live} random headlines labeled by Ollama right now")
         from src.sentiment import MODEL, ask
         sample = h.sample(live, random_state=7)
         t0 = time.time()

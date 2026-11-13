@@ -44,6 +44,15 @@ Plain-language record of what was done, what was found, and what changed from th
 - Paper numbers came from the arXiv HTML via a fetch tool; check them against the PDF before citing.
 - Detail: `reports/reproduction_vs_parent_paper.md`.
 
+## Novel contribution: how the local LLM labels headlines (2026-11-13)
+- Pre-registered `novelty_plan.md` (commit `beeaa3b`), then ran `src/novelty.py`: 4,582 Qwen calls, time-based 60/40 split, 916 test headlines.
+- Accuracy on test: FinBERT 0.547, Qwen zero-shot 0.753, few-shot fixed 0.777, **few-shot retrieved 0.809**, stacked 0.809.
+- Retrieved beats zero-shot by +5.6 points (CI +2.6 to +8.5) and fixed few-shot by +3.2 (CI +0.9 to +5.3). Fixed vs zero-shot (+2.4) includes zero. Stacking added nothing: the stacker copied Qwen's labels exactly.
+- Checked after the fact (exploratory): gain concentrates on FinBERT/Qwen disagreements (0.680 to 0.773); unchanged without exact-duplicate titles; similar across low/mid/high similarity.
+- Correction to our own framing: the parent paper did NOT use only FinBERT; it compared FinBERT with six ChatGPT prompts. Our novelty is the free local LLM, using both models, leakage-controlled forecasting, and retrieval-augmented labeling.
+- Not done: the optional 7B model; testing whether better labels help forecasting.
+- Detail: `reports/novelty_results.md`. Paper section draft: `reports/novel_approach_section.md`. Brief: `reports/brief_novelty.md`. Video script: `reports/video_script.md`.
+
 ## Changes the slides need
 | Slide | Change |
 |---|---|

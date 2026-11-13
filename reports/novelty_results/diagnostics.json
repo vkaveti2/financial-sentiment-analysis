@@ -1,0 +1,17 @@
+{
+  "best_single_by_dev": "A3",
+  "dev_accuracy": {
+    "A1": 0.7503660322108345,
+    "A2": 0.7730600292825769,
+    "A3": 0.7986822840409956
+  },
+  "test_rows": 916,
+  "test_dates": 32,
+  "test_rows_with_exact_title_in_dev": 20,
+  "A3_acc_without_exact_title_dups": 0.8046875,
+  "A1_acc_without_exact_title_dups": 0.75,
+  "A4_stacker_coef_shape": [
+    3,
+    8
+  ]
+}
