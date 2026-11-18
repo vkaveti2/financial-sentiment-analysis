@@ -13,7 +13,7 @@ import pandas as pd
 from src.models import ROOT
 from src.reproduce import classification, market_link
 
-SLIDE_DISAGREEMENT = (960, 2291)  # figure on the proposal slides (paper setup, ChatGPT GPT-P2)
+EARLIER_DISAGREEMENT = (960, 2291)  # midterm-slide figure; could not be reproduced (no ChatGPT labels in the public data)
 SCORE = {"positive": 1, "neutral": 0, "negative": -1}
 
 
@@ -39,9 +39,10 @@ def main(live: int) -> None:
     dis = fin != llm
     n, k = len(h), int(dis.sum())
     print(f"Our result (FinBERT vs Qwen via Ollama): {k:,} of {n:,} headlines differ = {100 * k / n:.1f}%")
-    sk, sn = SLIDE_DISAGREEMENT
-    print(f"Figure on the proposal slides:           {sk:,} of {sn:,} headlines differ = {100 * sk / sn:.1f}%  (paper setup, ChatGPT)")
-    print(f"Difference: {100 * k / n - 100 * sk / sn:+.1f} points. Different LLM, so this is a comparison, not a replication.")
+    sk, sn = EARLIER_DISAGREEMENT
+    print(f"Earlier midterm-slide figure:            {sk:,} of {sn:,} headlines differ = {100 * sk / sn:.1f}%")
+    print("That figure could not be reproduced: it needs ChatGPT labels, and the public data has none.")
+    print(f"Ours is {100 * k / n - 100 * sk / sn:+.1f} points away. Different LLM, so this is a comparison, not a replication.")
     print("\nWhere they disagree (rows = FinBERT, columns = Qwen):")
     print(pd.crosstab(fin.rename("FinBERT"), llm.rename("Qwen")).to_string())
 
@@ -82,13 +83,23 @@ def main(live: int) -> None:
 
     if live:
         heading(f"8. LIVE: {live} random headlines labeled by Ollama right now")
+        import urllib.error
+
         from src.sentiment import MODEL, ask
         sample = h.sample(live, random_state=7)
         t0 = time.time()
-        for _, r in sample.iterrows():
-            lab = ask(r["ticker"], r["title"])
-            print(f"\n{r['ticker']}: {r['title'][:90]}\n  human={r['true_sentiment'].lower():8s} FinBERT={r['finbert_sentiment'].lower():8s} {MODEL}={lab:8s}"
-                  f" (matches saved label: {lab == r['llm_sentiment']})")
+        try:
+            for _, r in sample.iterrows():
+                lab = ask(r["ticker"], r["title"])
+                same = "same as saved label" if lab == r["llm_sentiment"] else "differs from saved label (rare; every result uses the saved labels)"
+                print(f"\n{r['ticker']}: {r['title'][:90]}\n  human={r['true_sentiment'].lower():8s} FinBERT={r['finbert_sentiment'].lower():8s} "
+                      f"{MODEL}={lab:8s} ({same})")
+        except (urllib.error.URLError, ConnectionError, TimeoutError) as e:
+            print(f"\nCould not reach the local model ({e}).\n"
+                  "Start Ollama (open the Ollama app, or run `ollama serve` in a second Terminal tab), "
+                  f"check `ollama list` shows {MODEL}, then rerun this command.\n"
+                  "Everything above this line does not need Ollama and has already printed.")
+            raise SystemExit(1)
         print(f"\n{live} headlines in {time.time() - t0:.1f}s ({(time.time() - t0) / live:.2f}s each)")
 
 

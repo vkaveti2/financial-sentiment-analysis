@@ -1,0 +1,3 @@
+# Only needed to re-download prices (python -m src.prices --refresh). Not needed to reproduce results.
+-r requirements.txt
+yfinance
