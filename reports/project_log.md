@@ -53,6 +53,14 @@ Plain-language record of what was done, what was found, and what changed from th
 - Not done: the optional 7B model; testing whether better labels help forecasting.
 - Detail: `reports/novelty_results.md`. Paper section draft: `reports/novel_approach_section.md`. Brief: `reports/brief_novelty.md`. Video script: `reports/video_script.md`.
 
+## Week 12: clean-machine technical demo (2026-11-18)
+- Rewrote `README.md` as a step-by-step guide for a brand-new Mac (tools, clone, environment, data, tests, recreate results, local LLM, demo, troubleshooting). Added `docs/RECORDING_CHECKLIST.md`.
+- Froze the Yahoo prices as a checksummed snapshot (`data/snapshots/prices_daily.csv`, restored by `src.data`); `src.prices` now needs `--refresh`. Added `src/verify.py` (41 PASS/FAIL checks against the paper's numbers). Removed the unused OpenAI `.env.example`.
+- Slimmed `requirements.txt` to what the code imports and pinned scipy, joblib and threadpoolctl. Without those pins, Python 3.12 gave the same headline numbers (all 41 checks pass) but not byte-identical prediction files.
+- Rehearsal in clean virtual environments (no system packages, user site disabled), cloned fresh: Python 3.9.6 and 3.12.15 both pass 21 tests and 41 checks; with the pins, regenerated result files are byte-identical on both.
+- Rehearsal found and fixed: `src.demo --live` crashed with a traceback when Ollama was stopped (now a clear message and exit code 1).
+- Not verified: Harshi's machine (macOS version, RAM, admin rights, download speed), the live LLM step on her hardware, and the Ollama app's install flow (taken from Ollama's documentation).
+
 ## Changes the slides need
 | Slide | Change |
 |---|---|
