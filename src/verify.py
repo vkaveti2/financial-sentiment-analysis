@@ -73,6 +73,20 @@ def main() -> int:
         check("  95% interval low", 100 * p.loc[k, "lo"], lo, 1)
         check("  95% interval high", 100 * p.loc[k, "hi"], hi, 1)
 
+    section("5. Reproducing the parent paper's metrics on our data (all 2,291 headlines)")
+    from src.reproduce import classification, market_link
+    hp = pd.read_csv(ROOT / "data" / "processed" / "llm_labels.csv", parse_dates=["published_at"])
+    cl = classification(hp).set_index("model")
+    for model, col, paper in [("FinBERT", "accuracy", 0.562), ("FinBERT", "precision", 0.560),
+                              ("FinBERT", "recall", 0.562), ("FinBERT", "f1", 0.556), ("FinBERT", "s_mae", 0.540),
+                              ("LLM (Qwen)", "accuracy", 0.752), ("LLM (Qwen)", "s_mae", 0.277)]:
+        check(f"{model} {col}", cl.loc[model, col], paper, 3)
+    prices = pd.read_csv(ROOT / "data" / "raw" / "prices_daily.csv", parse_dates=["date", "move_date"])
+    ml = market_link(hp, prices).set_index("score")
+    check("same-day directional accuracy, FinBERT", ml.loc["FinBERT", "directional_acc"], 0.621, 3)
+    check("same-day directional accuracy, Qwen", ml.loc["LLM (Qwen)", "directional_acc"], 0.643, 3)
+    check("same-day correlation, human labels", ml.loc["human", "pearson"], 0.438, 3)
+
     n_fail = len(checks) - sum(checks)
     print(f"\n{'ALL ' + str(len(checks)) + ' CHECKS PASS: this machine reproduced the paper numbers.' if not n_fail else str(n_fail) + ' of ' + str(len(checks)) + ' CHECKS FAILED: see README Troubleshooting.'}")
     return 1 if n_fail else 0
